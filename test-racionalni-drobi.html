@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>СР 2. Множення та ділення раціональних дробів, 8 клас</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mut:#5d6677;--bd:#d9dde8;--ac:#3b5bdb;--ok:#1f8a4c;--okb:#e3f6ea;--bad:#c0392b;--badb:#fcebe9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1b2030;--tx:#e8ebf3;--mut:#9aa3b5;--bd:#2f3750;--ac:#7c93ff;--ok:#4cc784;--okb:#16301f;--bad:#ff7b6b;--badb:#3a1a18}}
+:root[data-theme="dark"]{--bg:#12151c;--card:#1b2030;--tx:#e8ebf3;--mut:#9aa3b5;--bd:#2f3750;--ac:#7c93ff;--ok:#4cc784;--okb:#16301f;--bad:#ff7b6b;--badb:#3a1a18}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.35rem;margin:.4rem 0}
+.sub{color:var(--mut);margin:0 0 12px}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:14px 0}
+.q.ok{border-color:var(--ok);background:var(--okb)}.q.bad{border-color:var(--bad);background:var(--badb)}
+.q h2{font-size:1rem;margin:0 0 8px;font-weight:600}
+.q .n{color:var(--ac);margin-right:6px}
+label.o{display:flex;gap:8px;align-items:center;padding:7px 8px;border:1px solid var(--bd);border-radius:8px;margin:6px 0;cursor:pointer;background:var(--card);color:var(--tx)}
+label.o:hover{border-color:var(--ac)}
+math{font-size:1.15em}
+.row{display:flex;gap:12px;align-items:center;margin:8px 0;flex-wrap:wrap}
+.row .e{flex:1;min-width:180px;overflow-x:auto}
+select,input[type=text]{font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0;padding:8px;border:1px dashed var(--bd);border-radius:8px}
+.fb{margin-top:8px;font-size:.92rem;color:var(--mut);display:none}
+.q.ok .fb,.q.bad .fb{display:block}
+.pts{font-weight:600;color:var(--tx)}
+button{font:inherit;padding:10px 18px;border-radius:10px;border:0;background:var(--ac);color:#fff;cursor:pointer;margin-right:8px}
+button.sec{background:transparent;color:var(--ac);border:1px solid var(--ac)}
+#res{display:none;background:var(--card);border:2px solid var(--ac);border-radius:12px;padding:14px 16px;margin:14px 0}
+#res b{font-size:1.4rem}
+#bar{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;margin-bottom:8px}#bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .2s}
+#timer{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:6px 12px;font-weight:600;z-index:5;margin-bottom:8px;width:fit-content}
+#code{max-width:100%}
+</style>
+</head>
+<body>
+<main>
+<h1>Самостійна робота 2. Множення та ділення раціональних дробів</h1>
+<p class="sub">8 клас, алгебра. Виконайте всі завдання й натисніть «Завершити та перевірити». Тест можна пройти лише один раз, витрачений час фіксується. Максимум — 21 бал (переводиться у 12-бальну шкалу).</p>
+<div id="start" class="q"><h2>Перед початком</h2>
+<label style="display:block;margin-bottom:10px">Прізвище та ім’я: <input type="text" id="name" size="26"></label>
+<button id="go">Почати тест</button><div id="done"></div></div>
+<div id="test" style="display:none">
+<div id="timer"></div>
+<div id="bar"><i></i></div>
+<div id="qs"></div>
+<div id="res"></div>
+<button id="chk">Завершити та перевірити</button></div>
+</main>
+<script>
+function parse(s){let i=0;
+function seq(end){let o='';while(i<s.length&&s[i]!==end)o+=post(atom());return o}
+function atom(){const c=s[i];
+if(c==='{'){i++;const r=seq('}');i++;return'<mrow>'+r+'</mrow>'}
+if(c==='('){i++;const r=seq(')');i++;return'<mrow><mo>(</mo>'+r+'<mo>)</mo></mrow>'}
+if(/[\d,]/.test(c)){let n='';while(/[\d,]/.test(s[i]||''))n+=s[i++];return'<mn>'+n+'</mn>'}
+i++;
+if(/[a-zA-Z]/.test(c))return'<mi>'+c+'</mi>';
+if(c==='*')return'<mo>·</mo>';if(c==='-')return'<mo>−</mo>';return'<mo>'+c+'</mo>'}
+function post(a){if(s[i]==='^'){i++;const e=atom();return post('<msup>'+a+e+'</msup>')}
+if(s[i]==='/'&&s[i+1]==='{'){i++;const d=atom();return'<mfrac>'+a+d+'</mfrac>'}return a}
+return'<math>'+seq()+'</math>'}
+const R=t=>t.replace(/\$([^$]+)\$/g,(_,m)=>parse(m));
+const L=['А','Б','В','Г'];
+const qs=[
+{type:'s',t:'Щоб виконати ділення $\u007Bx^2-9}/{x+2}:{x-3}/{x+2}$, який перший крок є правильним?',
+o:['Скоротити $x+2$ у знаменниках обох дробів.','Розкласти на множники чисельник $x^2-9$.','Замінити ділення на множення, перевернувши другий дріб.','Звести дроби до спільного знаменника.'],a:2,
+e:'Ділення на дріб замінюємо множенням на обернений дріб.'},
+{type:'s',t:'Подайте у вигляді дробу вираз $\u007B15}/{a^4}*{a^8}/{5}$.',o:['${a^2}/{3}$','${a^4}/{3}$','$3a^2$','$3a^4$'],a:3,
+e:'15·a⁸/(5·a⁴) = 3a⁴.'},
+{type:'s',t:'Учень правильно виконав множення: $\u007Ba(a-12)}/{6}*{1}/{a-12}={a}/{6}$. Яку основну властивість раціональних дробів він використав?',
+o:['Додавання дробів з однаковими знаменниками.','Піднесення дробу до степеня для розкриття дужок.','Скорочення дробу на спільний множник чисельника і знаменника.','Множення чисельника і знаменника на одне й те саме число.'],a:2,
+e:'Скоротили спільний множник $(a-12)$.'},
+{type:'s',t:'Щоб спростити добуток $\u007B3mn-6n}/{2m^3}*{4m^4}/{m^2n-4n}$, у чисельнику першого дробу виносять спільний множник $3n$. Яку подальшу дію це дозволить виконати?',
+o:['Додати його до чисельника другого дробу.','Піднести його до степеня, що відповідає показнику змінної $m$.','Скоротити його з множником $(m-2)$, що утвориться у знаменнику другого дробу.','Скоротити його зі знаменником $2m^3$, застосувавши властивість степенів.'],a:2,
+e:'$3mn-6n=3n(m-2)$, а $m^2n-4n=n(m-2)(m+2)$, тому $(m-2)$ скорочується.'},
+{type:'s',t:'Виконайте піднесення до степеня: $({3m^6}/{n^3})^3$.',o:['${27m^{18}}/{n^9}$','${9m^{18}}/{n^9}$','${9m^9}/{n^6}$','${27m^9}/{n^6}$'],a:0,
+e:'$3^3=27$, $(m^6)^3=m^{18}$, $(n^3)^3=n^9$.'},
+{type:'m',t:'Значення яких виразів не залежить від значення змінної? (оберіть усі правильні)',
+o:['${b-3}/{b^4}:{5b-15}/{b^5}$','${ab-3a}/{5}*{b+3}/{ab^2-9a}$','${a^2-12a}/{6}:(a-12)$','${14a}/{9ab-a^2}*{ab-9b^2}/{21b}$'],a:[1,3],
+e:'Спрощення дають: $b/5$; ${1}/{5}$; $a/6$; $-{2}/{3}$. Не залежать — другий і четвертий.'},
+{type:'x',t:'Установіть відповідність між виразом (1–3) та його спрощеним виглядом (А–Г).',
+r:['${a^2}/{b}*{b}/{a^3}$','${a^2}/{b}:{a}/{b}$','$({a^3}/{b^2})^2*{b^4}/{a}$'],
+l:['$a$','$a^5$','$1$','${1}/{a}$'],a:[3,0,1],e:'1 → Г, 2 → А, 3 → Б.'},
+{type:'n',pts:2,t:'Спростіть вираз $({4}/{3a-12}-{4a}/{a^2-16}):{40}/{a^2-16}$ та обчисліть його значення, якщо $a=17$. Введіть число.',a:-1,
+e:'Спрощений вираз: $-{a-2}/{15}$. При $a=17$ отримуємо $-1$.'},
+{type:'m',t:'Розглядаючи вираз $-{4x^2-20x+25}/{5x-30}*({2x-12}/{2x-5})^2$, учень зробив кілька перетворень. Оберіть усі правильні кроки та висновки.',
+o:['Чисельник першого дробу можна записати як $(2x-5)^2$.','Знаменник першого дробу після винесення множника дорівнює $5(x-30)$.','Вираз $({2x-12}/{2x-5})^2$ дорівнює ${4(x-6)^2}/{(2x-5)^2}$.','Кінцевий результат спрощення дорівнює $-{4(x-6)}/{5}$.'],a:[0,2,3],
+e:'$5x-30=5(x-6)$, тому другий крок хибний.'},
+{type:'s',t:'Щоб довести, що значення виразу $({y^2-49}/{y^2-14y+49})^4:({y+7}/{y-7})^4$ не залежить від змінної, яка стратегія є найефективнішою?',
+o:['Підставити довільне число, наприклад $y=1$, і перевірити результат.','Розкрити дужки, піднісши кожен чисельник і знаменник до 4-го степеня.','Спочатку виконати ділення дробів у дужках, а потім піднести результат до степеня.','Побудувати графік функції та перевірити, чи є він горизонтальною прямою.'],a:2,
+e:'Перший дріб дорівнює ${y+7}/{y-7}$, тож вираз дорівнює 1.'},
+{type:'x',t:'Установіть відповідність між виразами (1–3) та їх значеннями (А–Г), якщо $x=-2,5$.',
+r:['${x(x+1)}/{2x-4}*(1-{3}/{x+1})$','${16x^2-9}/{x}:(8x-6)$','${x-5}/{3x+1}*{9x^2+6x+1}/{x^2-25}$'],
+l:['$-2,6$','$1,25$','$-1,25$','$1,4$'],a:[2,3,0],e:'1 → В ($x/2$), 2 → Г (${4x+3}/{2x}$), 3 → А (${3x+1}/{x+5}$).'},
+{type:'n',pts:2,t:'Знайдіть значення виразу $16x^2+{1}/{x^2}$, якщо $4x-{1}/{x}=12$. Введіть число.',a:152,
+e:'Піднесемо до квадрата: $16x^2-8+{1}/{x^2}=144$, отже відповідь 152.'}
+];
+const box=document.getElementById('qs');
+qs.forEach((q,i)=>{
+let h='<div class="q" id="q'+i+'"><h2><span class="n">'+(i+1)+'.</span>'+R(q.t)+'</h2>';
+if(q.type==='s'||q.type==='m')q.o.forEach((o,j)=>{h+='<label class="o"><input type="'+(q.type==='s'?'radio':'checkbox')+'" name="q'+i+'" value="'+j+'"><span>'+R(o)+'</span></label>'});
+if(q.type==='x'){h+='<div class="leg">'+q.l.map((l,j)=>'<span><b>'+L[j]+'.</b> '+R(l)+'</span>').join('')+'</div>';
+q.r.forEach((r,j)=>{h+='<div class="row"><b>'+(j+1)+'.</b><span class="e">'+R(r)+'</span><span>=</span><select name="q'+i+'_'+j+'"><option value="">—</option>'+L.map((l,k)=>'<option value="'+k+'">'+l+'</option>').join('')+'</select></div>'})}
+if(q.type==='n')h+='<input type="text" inputmode="decimal" name="q'+i+'" placeholder="Відповідь" size="12">';
+h+='<div class="fb"></div></div>';box.insertAdjacentHTML('beforeend',h)});
+const maxOf=q=>q.type==='s'?1:q.type==='m'?q.a.length:q.type==='x'?q.r.length:q.pts;
+const TOTAL=qs.reduce((s,q)=>s+maxOf(q),0);
+function upd(){const d=qs.filter((q,i)=>{const c=document.getElementById('q'+i);return[...c.querySelectorAll('input:checked')].length||[...c.querySelectorAll('select')].some(s=>s.value!=='')||(c.querySelector('input[type=text]')||{}).value}).length;
+document.querySelector('#bar i').style.width=(d/qs.length*100)+'%'}
+box.addEventListener('input',upd);
+function finish(){
+if(window.__f)return;window.__f=1;clearInterval(window.__t);const secs=Math.round((Date.now()-window.__t0)/1000);
+let sum=0;const ansL=[];
+qs.forEach((q,i)=>{const c=document.getElementById('q'+i);let p=0;
+if(q.type==='s'){const k=c.querySelector('input:checked');p=k&&+k.value===q.a?1:0}
+if(q.type==='m'){const v=[...c.querySelectorAll('input:checked')].map(x=>+x.value);const ok=v.filter(x=>q.a.includes(x)).length;p=Math.max(0,ok-(v.length-ok))}
+if(q.type==='x'){q.a.forEach((a,j)=>{if(c.querySelector('select[name=q'+i+'_'+j+']').value===String(a))p++})}
+if(q.type==='n'){const v=parseFloat(c.querySelector('input[type=text]').value.replace(',','.'));p=Math.abs(v-q.a)<1e-9?q.pts:0}
+const mx=maxOf(q);sum+=p;
+{let s='-';if(q.type==='s'){const k=c.querySelector('input:checked');if(k)s=L[+k.value]}
+if(q.type==='m'){const v=[...c.querySelectorAll('input:checked')].map(x=>L[+x.value]);if(v.length)s=v.join(',')}
+if(q.type==='x'){s=q.a.map((a,j)=>{const v=c.querySelector('select[name=q'+i+'_'+j+']').value;return v===''?'-':L[+v]}).join(',')}
+if(q.type==='n'){s=c.querySelector('input[type=text]').value.trim().replace(/[;|<>&]/g,'')||'-'}
+ansL.push(s)}
+c.querySelectorAll('input,select').forEach(x=>x.disabled=true)});
+const g=Math.round(sum/TOTAL*12),pc=Math.round(sum/TOTAL*100);
+const nm=document.getElementById('name').value.trim();
+const r=document.getElementById('res');r.style.display='block';
+r.innerHTML=(nm?nm+': ':'')+'<b>'+sum+' / '+TOTAL+' балів</b> ('+pc+'%). Оцінка за 12-бальною шкалою: <b>'+g+'</b>';
+const rec={n:nm,s:sum,g:g,p:pc,t:secs,d:new Date().toLocaleString('uk-UA'),a:ansL.join(';')};
+try{localStorage.setItem(KEY,JSON.stringify(rec))}catch(e){}
+r.innerHTML+='<br>Витрачений час: <b>'+fmt(secs)+'</b><br><small>Код результату для вчителя:</small><br><input type="text" readonly size="48" id="code" value="'+code(rec)+'"> <button class="sec" id="cp">Копіювати</button>';
+document.getElementById('cp').onclick=()=>{const c=document.getElementById('code');c.select();try{navigator.clipboard.writeText(c.value)}catch(e){document.execCommand('copy')}};
+r.scrollIntoView({behavior:'smooth'});document.getElementById('chk').disabled=true;document.querySelectorAll('#test input,#test select').forEach(x=>{if(x.id!=='code')x.disabled=true})}
+const _unused=()=>{document.querySelectorAll('.q').forEach(c=>{c.classList.remove('ok','bad');c.querySelectorAll('input,select').forEach(x=>{x.disabled=false;if(x.type==='radio'||x.type==='checkbox')x.checked=false;else x.value=''})});
+document.getElementById('res').style.display='none';document.getElementById('chk').disabled=false;upd();window.scrollTo({top:0,behavior:'smooth'})};
+const KEY='sr2-rac-drobi-v1',LIMIT=0; // LIMIT — ліміт часу в хвилинах, 0 = без обмеження
+const fmt=s=>Math.floor(s/60)+' хв '+String(s%60).padStart(2,'0')+' с';
+const code=r=>r.n+' | '+r.s+'/'+TOTAL+' | оцінка '+r.g+' | час '+fmt(r.t)+' | '+r.d+' | відп: '+(r.a||'');
+document.getElementById('chk').onclick=finish;
+const tm=document.getElementById('timer'),go=document.getElementById('go'),dn=document.getElementById('done');
+function tickf(){const s=Math.round((Date.now()-window.__t0)/1000);tm.textContent='⏱ '+fmt(s)+(LIMIT?' / '+LIMIT+' хв':'');if(LIMIT&&s>=LIMIT*60)finish()}
+let saved=null,started=null;
+try{saved=JSON.parse(localStorage.getItem(KEY));started=localStorage.getItem(KEY+'-s')}catch(e){}
+if(saved||started){go.style.display='none';document.querySelector('#start label').style.display='none';
+dn.textContent=saved?'Ви вже пройшли цей тест, повторна спроба неможлива. '+code(saved):'Спробу вже розпочато на цьому пристрої й не завершено. Зверніться до вчителя.'}
+const TP='<hr><h2>Перевірка роботи (для вчителя)</h2><p>Вставте код результату учня. Якщо поле порожнє, буде показано лише ключ відповідей.</p><textarea id="pc" rows="3" style="width:100%"></textarea><p><button id="chkcode">Показати розбір</button></p><div id="tv"></div>';
+const keyOf=q=>q.type==='s'?L[q.a]:q.type==='n'?String(q.a):q.a.map(x=>L[x]).join(',');
+function teach(){const raw=document.getElementById('pc').value.trim(),tv=document.getElementById('tv');
+let A=[],head='<p><b>Ключ відповідей</b></p>';
+if(raw){const t=raw.split(' | ').map(x=>x.replace(/[<>&]/g,'')),i=t.findIndex(x=>x.startsWith('відп: '));if(i<0){tv.textContent='У коді немає відповідей.';return}A=t[i].slice(6).split(';');head='<p><b>'+t.slice(0,4).join(' | ')+'</b></p>'}
+let rows='',tot=0;
+qs.forEach((q,k)=>{const a=(A[k]||'-').trim(),key=keyOf(q),mx=maxOf(q);let p=0;
+if(raw&&a!=='-'){if(q.type==='s')p=a===key?1:0;
+else if(q.type==='m'){const kk=key.split(','),v=a.split(','),ok=v.filter(x=>kk.includes(x)).length;p=Math.max(0,ok-(v.length-ok))}
+else if(q.type==='x'){const kk=key.split(',');a.split(',').forEach((x,j)=>{if(x===kk[j])p++})}
+else p=Math.abs(parseFloat(a.replace(',','.'))-q.a)<1e-9?q.pts:0}
+tot+=p;
+rows+='<tr'+(raw?' style="color:var(--'+(p===mx?'ok':'bad')+')"':'')+'><td>'+(k+1)+'</td><td>'+(raw?a:'')+'</td><td>'+key+'</td><td>'+(raw?p+' з '+mx:mx)+'</td></tr>'});
+tv.innerHTML=head+'<table style="width:100%;text-align:left"><tr><th>№</th><th>Відповідь учня</th><th>Правильна</th><th>Бали</th></tr>'+rows+'</table>'+(raw?'<p>Разом: <b>'+tot+' / '+TOTAL+'</b></p>':'')}
+if(location.hash==='#teacher'){dn.insertAdjacentHTML('beforeend','<p><button class="sec" id="tr">Скинути спробу (для вчителя)</button></p>');
+document.getElementById('tr').onclick=()=>{try{localStorage.removeItem(KEY);localStorage.removeItem(KEY+'-s')}catch(e){}location.reload()}
+dn.insertAdjacentHTML('beforeend',TP);document.getElementById('chkcode').onclick=teach}
+go.onclick=()=>{const n=document.getElementById('name');n.value=n.value.replace(/[<>&"|]/g,'').trim();if(!n.value){n.focus();return}
+try{localStorage.setItem(KEY+'-s',n.value)}catch(e){}
+window.__t0=Date.now();document.getElementById('start').style.display='none';document.getElementById('test').style.display='block';
+window.__t=setInterval(tickf,1000);tickf();window.scrollTo(0,0)};
+</script>
+</body>
+</html>
